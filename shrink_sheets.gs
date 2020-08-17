@@ -35,7 +35,7 @@ const delForAllSheets = () => {
 
 let delBlankColumns = (sheet, feather = 0) => {
   let currentSheet = sheet || SpreadsheetApp.getActive().getActiveSheet()
-  const lastColumn = currentSheet.getLastColumn()
+  const lastColumn = currentSheet.getLastColumn() || 1
   const numBlankColumns = currentSheet.getMaxColumns() - lastColumn
   if(numBlankColumns - feather >0){
     currentSheet.deleteColumns(lastColumn+1, numBlankColumns - feather)
@@ -44,7 +44,7 @@ let delBlankColumns = (sheet, feather = 0) => {
 
 let delBlankRows = (sheet, feather = 0) => {
   let currentSheet = sheet || SpreadsheetApp.getActive().getActiveSheet()
-  const lastRow = currentSheet.getLastRow()
+  const lastRow = currentSheet.getLastRow() || 1
   const numBlankRows = currentSheet.getMaxRows() - lastRow
   if(numBlankRows - feather >0){
     currentSheet.deleteRows(lastRow+1, numBlankRows)
