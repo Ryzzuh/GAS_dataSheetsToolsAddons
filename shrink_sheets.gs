@@ -25,9 +25,11 @@ const delForAllSheets = () => {
   const feather = showPrompt()
   const sheets = SpreadsheetApp.getActive().getSheets()
   for(sheet of sheets){
-    delBlankColumns(sheet, feather)
-    delBlankRows(sheet, feather)
-  } 
+    if(sheet.getLastRow()>0){
+      delBlankColumns(sheet, feather)
+      delBlankRows(sheet, feather)
+    }
+  }
 }
 
 
