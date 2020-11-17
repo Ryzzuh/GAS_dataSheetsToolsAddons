@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+
+  </head>
+  
+  <body>
+
+<div id='form_container'>
+<div class="spinner-border text-primary" role="status">
+  <span class="sr-only">Loading...</span>
+</div>
+<table id='table' class="table table-striped">
+  <thead>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+</div>
+<button id="getData" type="button" class="btn btn-primary">Load data to Bigquery</button>
+
+<script>
+    $(document)
+      .ready(() => {
+      // console.log('ready')
+      // check template
+      const checkTemplate = (text) => `<div class="form-check disabled">
+      <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="option3" disabled>
+      <label class="form-check-label" for="exampleRadios3">
+      ${text}
+      </label>
+      </div>`
+      
+      const tableTemplate = (data) => `<tr>
+      <th scope="row">
+        <div class="form-check">
+        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
+        <label class="form-check-label" for="exampleRadios1">
+        </label>
+        </div>
+      </th>
+      <td>${data[0]}</td>
+      <td>${data[1]}</td>
+      <td>${data[2]}</td>
+      <td>${data[3]}</td>
+      </tr>`
+      // end template
+      
+      
+      const x = (val) => {
+      $.each(val, function(index, value){
+        $('#table tbody').append(tableTemplate(value))
+      });
+      $('#table thead').append(`<tr>
+      <th scope="col"></th>
+      <th scope="col">Source Sheet</th>
+      <th scope="col">PROJECT_ID</th>
+      <th scope="col">DATASET_ID</th>
+      <th scope="col">TABLE_ID</th>
+      </tr>`)
+      
+      $('.spinner-border').hide()
+      }
+      
+      $('#getData').click(function() {
+        //alert( "Handler for .click() called." );
+        const sourceSheet = $("input:checked").parent().parent().parent().children()[1].innerText
+        const PROJECT_ID = $("input:checked").parent().parent().parent().children()[2].innerText
+        const DATASET_ID = $("input:checked").parent().parent().parent().children()[3].innerText
+        const TABLE_ID = $("input:checked").parent().parent().parent().children()[4].innerText
+        //console.log([sourceSheet, PROJECT_ID, DATASET_ID, TABLE_ID])
+        google.script.run.withSuccessHandler()
+          .doSomething([sourceSheet, PROJECT_ID, DATASET_ID, TABLE_ID])
+      });
+      
+      //function onSuccess(numUnread) {return 1}
+      google.script.run.withSuccessHandler(x)
+          .getSettings()
+      //google.script.run.init_BQtools();  
+      })
+      
+    </script>
+  </body>
+    
+</html>

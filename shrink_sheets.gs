@@ -16,25 +16,23 @@ const showPrompt = () => {
 
 const delForThisSheet = () => {
   const feather = showPrompt()
-  const sheet = SpreadsheetApp.getActive().getActiveSheet()
+  const sheet = ACTIVESHEET()
     delBlankColumns(sheet, feather)
     delBlankRows(sheet, feather)
 }
 
 const delForAllSheets = () => {
   const feather = showPrompt()
-  const sheets = SpreadsheetApp.getActive().getSheets()
+  const sheets = getGridSheets()
   for(sheet of sheets){
-    if(sheet.getLastRow()>0){
       delBlankColumns(sheet, feather)
       delBlankRows(sheet, feather)
-    }
   }
 }
 
 
 let delBlankColumns = (sheet, feather = 0) => {
-  let currentSheet = sheet || SpreadsheetApp.getActive().getActiveSheet()
+  let currentSheet = sheet || ACTIVESHEET()
   const lastColumn = currentSheet.getLastColumn() || 1
   const numBlankColumns = currentSheet.getMaxColumns() - lastColumn
   if(numBlankColumns - feather >0){
@@ -43,10 +41,18 @@ let delBlankColumns = (sheet, feather = 0) => {
 }
 
 let delBlankRows = (sheet, feather = 0) => {
-  let currentSheet = sheet || SpreadsheetApp.getActive().getActiveSheet()
+  Logger.log(sheet.getName())
+  let currentSheet = sheet || ACTIVESHEET()
   const lastRow = currentSheet.getLastRow() || 1
-  const numBlankRows = currentSheet.getMaxRows() - lastRow
+  const numBlankRows = currentSheet.getMaxRows() - lastRow - currentSheet.getFrozenRows()
   if(numBlankRows - feather >0){
     currentSheet.deleteRows(lastRow+1, numBlankRows)
   }
+}
+
+const test_delForBqConnector = () => {
+  const sheets = SpreadsheetApp.getActive().getSheets().map(s=>s.getType())
+  const sheet = SpreadsheetApp.getActive().getSheetByName('community_kwds_2019_to_202005');
+  // const sheet = ACTIVESHEET()
+  Logger.log(sheets)
 }
